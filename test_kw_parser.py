@@ -6,6 +6,8 @@ Test script for KW Parser - uses mock data to verify functionality
 import json
 import sys
 import os
+import csv
+import tempfile
 
 # Add parent directory to path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -125,14 +127,17 @@ def test_save_to_csv():
     ]
     
     parser = KWParser()
-    output_file = '/tmp/test_kw_products.csv'
+    
+    # Use tempfile for cross-platform compatibility
+    with tempfile.NamedTemporaryFile(mode='w', suffix='.csv', delete=False) as tmp:
+        output_file = tmp.name
+    
     result = parser.save_to_csv(mock_products, output_file)
     
     # Verify file was created
     assert os.path.exists(output_file)
     
     # Read and verify CSV content
-    import csv
     with open(output_file, 'r', encoding='utf-8') as f:
         reader = csv.DictReader(f)
         rows = list(reader)

@@ -12,6 +12,9 @@ from datetime import datetime
 from typing import List, Dict, Optional
 import sys
 
+# Constants
+DEFAULT_DESCRIPTION_LENGTH = 500  # Maximum length for product description in CSV
+
 
 class KWParser:
     """Parser for KW automotive Shopify store"""
@@ -135,9 +138,9 @@ class KWParser:
             extracted['image_url'] = ''
             extracted['image_count'] = 0
         
-        # Add description (truncated)
+        # Add description (truncated to avoid overly large CSV fields)
         description = product.get('body_html', '')
-        extracted['description'] = description[:500] if description else ''
+        extracted['description'] = description[:DEFAULT_DESCRIPTION_LENGTH] if description else ''
         
         return extracted
     
